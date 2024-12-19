@@ -10,12 +10,12 @@ warnings.filterwarnings('ignore')
 st.set_page_config(page_title="Analisis Penjualan Interaktif", layout="wide")  
 st.title("Analisis Penjualan Interaktif: Kategori, Wilayah, dan Waktu")  
 
-# File uploader widget
-fl = st.file_uploader(":file_folder: Upload a file", type=["csv", "xls", "xlsx"])
+# File Uploader di Streamlit
+uploaded_file = st.file_uploader("Upload a file", type=["xls", "xlsx"])
 
 if uploaded_file is not None:
+    # Jika ada file yang diupload, baca file tersebut
     try:
-        # Jika ada file yang diupload, baca dengan pandas
         df = pd.read_excel(uploaded_file)
         st.write(df)
     except Exception as e:
@@ -23,15 +23,16 @@ if uploaded_file is not None:
 else:
     # Jika tidak ada file yang diupload, gunakan file default dari GitHub
     try:
+        # URL file default di GitHub (gunakan raw link untuk file)
         url = "https://github.com/anisalyahfza/Final-Project-Visdat/raw/main/Sample%20-%20Superstore.xls"
         response = requests.get(url)
         response.raise_for_status()  # Pastikan file dapat diakses
         # Membaca file .xls yang diunduh
-        df = pd.read_excel(io.BytesIO(response.content), engine='xlrd')  # xlrd untuk file .xls
+        df = pd.read_excel(io.BytesIO(response.content), engine='xlrd')  # Gunakan engine xlrd untuk file .xls
         st.write(df)
     except Exception as e:
         st.error(f"Error loading default file from GitHub: {e}")
-        
+
 col1, col2 = st.columns((2))
 df["Order Date"] = pd.to_datetime(df["Order Date"])
 

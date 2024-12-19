@@ -45,7 +45,7 @@ if fl is not None:
         st.error(f"Error reading the file: {e}")
 else:
     # Fallback: Use a default file if no file is uploaded
-    os.chdir("Sample - Superstore.xls")
+    os.chdir("https://github.com/anisalyahfza/Final-Project-Visdat/blob/main/Sample%20-%20Superstore.xls")
     try:
         df = pd.read_excel("https://github.com/anisalyahfza/Final-Project-Visdat/blob/main/Sample%20-%20Superstore.xls", engine='xlrd')  # Use xlrd for .xls files
         st.write(df)

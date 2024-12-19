@@ -14,43 +14,23 @@ st.title("Analisis Penjualan Interaktif: Kategori, Wilayah, dan Waktu")
 fl = st.file_uploader(":file_folder: Upload a file", type=["csv", "xls", "xlsx"])
 
 # Check if a file has been uploaded
-if fl is not None:
-    filename = fl.name
-    st.write(f"Uploaded file: {filename}")
-
+if uploaded_file is not None:
     try:
-        # Handle CSV files
-        if filename.endswith('.csv'):
-            df = pd.read_csv(fl, encoding="ISO-8859-1")
-            st.write(df)
-
-        # Handle Excel files (.xls or .xlsx)
-        elif filename.endswith('.xls') or filename.endswith('.xlsx'):
-            # Try using the openpyxl engine for modern .xlsx files
-            try:
-                df = pd.read_excel(fl, engine='openpyxl')
-            except Exception as e:
-                # In case of error with openpyxl, try xlrd for older .xls files
-                try:
-                    df = pd.read_excel(fl, engine='xlrd')
-                except Exception as ex:
-                    st.error(f"Error loading Excel file: {ex}")
-                    st.stop()
-
-            st.write(df)
-        else:
-            st.error("Invalid file format. Please upload a CSV or Excel file.")
-    
-    except Exception as e:
-        st.error(f"Error reading the file: {e}")
-else:
-    # Fallback: Use a default file if no file is uploaded
-    os.chdir("https://github.com/anisalyahfza/Final-Project-Visdat/blob/main/Sample%20-%20Superstore.xls")
-    try:
-        df = pd.read_excel("https://github.com/anisalyahfza/Final-Project-Visdat/blob/main/Sample%20-%20Superstore.xls", engine='xlrd')  # Use xlrd for .xls files
+        df = pd.read_excel(uploaded_file)
         st.write(df)
     except Exception as e:
-        st.error(f"Error loading default file: {e}")
+        st.error(f"Error loading uploaded file: {e}")
+else:
+    # Fallback: Use a default file from GitHub
+    try:
+        url = "https://github.com/anisalyahfza/Final-Project-Visdat/raw/main/Sample%20-%20Superstore.xls"
+        response = requests.get(url)
+        response.raise_for_status()  # Cek apakah URL berhasil diakses
+        # Membaca file yang didownload dengan pandas
+        df = pd.read_excel(io.BytesIO(response.content), engine='xlrd')  # Menggunakan xlrd untuk file .xls
+        st.write(df)
+    except Exception as e:
+        st.error(f"Error loading default file from GitHub: {e}")
 
 col1, col2 = st.columns((2))
 df["Order Date"] = pd.to_datetime(df["Order Date"])

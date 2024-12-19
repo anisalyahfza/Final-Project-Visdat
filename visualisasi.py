@@ -47,7 +47,7 @@ else:
     # Fallback: Use a default file if no file is uploaded
     os.chdir("Sample - Superstore.xls")
     try:
-        df = pd.read_excel("Sample - Superstore.xls", engine='xlrd')  # Use xlrd for .xls files
+        df = pd.read_excel("https://github.com/anisalyahfza/Final-Project-Visdat/blob/main/Sample%20-%20Superstore.xls", engine='xlrd')  # Use xlrd for .xls files
         st.write(df)
     except Exception as e:
         st.error(f"Error loading default file: {e}")

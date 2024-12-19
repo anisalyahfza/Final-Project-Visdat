@@ -13,25 +13,25 @@ st.title("Analisis Penjualan Interaktif: Kategori, Wilayah, dan Waktu")
 # File uploader widget
 fl = st.file_uploader(":file_folder: Upload a file", type=["csv", "xls", "xlsx"])
 
-# Check if a file has been uploaded
 if uploaded_file is not None:
     try:
+        # Jika ada file yang diupload, baca dengan pandas
         df = pd.read_excel(uploaded_file)
         st.write(df)
     except Exception as e:
         st.error(f"Error loading uploaded file: {e}")
 else:
-    # Fallback: Use a default file from GitHub
+    # Jika tidak ada file yang diupload, gunakan file default dari GitHub
     try:
         url = "https://github.com/anisalyahfza/Final-Project-Visdat/raw/main/Sample%20-%20Superstore.xls"
         response = requests.get(url)
-        response.raise_for_status()  # Cek apakah URL berhasil diakses
-        # Membaca file yang didownload dengan pandas
-        df = pd.read_excel(io.BytesIO(response.content), engine='xlrd')  # Menggunakan xlrd untuk file .xls
+        response.raise_for_status()  # Pastikan file dapat diakses
+        # Membaca file .xls yang diunduh
+        df = pd.read_excel(io.BytesIO(response.content), engine='xlrd')  # xlrd untuk file .xls
         st.write(df)
     except Exception as e:
         st.error(f"Error loading default file from GitHub: {e}")
-
+        
 col1, col2 = st.columns((2))
 df["Order Date"] = pd.to_datetime(df["Order Date"])
 

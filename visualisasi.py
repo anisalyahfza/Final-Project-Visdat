@@ -151,6 +151,49 @@ with cl2:
         csv = region.to_csv(index=False).encode('utf-8')
         st.download_button("Download Data", data=csv, file_name="Region.csv", mime="text/csv",
                            help='Click here to download the data as a CSV file')
+# Pilihan indikator di bagian utama
+st.header("Pemilihan Metrik untuk Visualisasi")
+st.markdown("""
+Pengguna dapat memilih metrik seperti penjualan, laba, atau kuantitas untuk menyesuaikan visualisasi, seperti grafik bar.
+""")
+indikator = st.selectbox("Pilih indikator", ["Sales", "Quantity", "Profit"])
+
+# Filter data berdasarkan pilihan indikator
+st.subheader(f"Data Berdasarkan Indikator: {indikator}")
+if indikator == "Sales":
+    data_filtered = df[["Order Date", "Sales"]]
+    total_value = df["Sales"].sum()
+    avg_value = df["Sales"].mean()
+elif indikator == "Quantity":
+    data_filtered = df[["Order Date", "Quantity"]]
+    total_value = df["Quantity"].sum()
+    avg_value = df["Quantity"].mean()
+elif indikator == "Profit":
+    data_filtered = df[["Order Date", "Profit"]]
+    total_value = df["Profit"].sum()
+    avg_value = df["Profit"].mean()
+
+# Tampilkan tabel data
+st.dataframe(data_filtered)
+
+# Visualisasi sederhana
+st.subheader(f"Grafik {indikator} Harian")
+st.line_chart(data_filtered.set_index("Order Date"))
+
+# Menampilkan metrik terkait
+st.subheader("Metrik Analisis")
+st.markdown("""
+<div style="text-align: justify;">
+    Metrik Analisis, kode ini menampilkan dua nilai penting terkait indikator yang dipilih (Sales, Quantity, atau Profit):
+    <ul>
+        <li><b>Total: </b> Menunjukkan total keseluruhan dari nilai indikator yang dipilih (misalnya total penjualan, total kuantitas, atau total laba) selama periode yang dipilih.</li>
+        <li><b>Rata-rata:</b> Menampilkan rata-rata harian dari indikator yang dipilih, memberikan gambaran umum tentang kinerja rata-rata indikator tersebut selama periode yang ditampilkan.</li>
+    </ul>
+</div>
+""", unsafe_allow_html=True)
+st.metric(label="Total", value=f"{total_value:,.2f}")
+st.metric(label="Rata-rata", value=f"{avg_value:,.2f}")
+
 
 ## Time Series Analysis
 filtered_df["month_year"] = filtered_df["Order Date"].dt.to_period("M")
